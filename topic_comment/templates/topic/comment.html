@@ -1,0 +1,77 @@
+
+
+  <div class="col-12">
+      <div class="comments">
+        <div class="comments-details">
+          <span class="total-comments comments-sort">Comments {{total_comments}}</span>
+          <span class="dropdown">
+              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">Sort By <span class="caret"></span></button>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item">Top Comments</a>
+              <a href="#" class="dropdown-item">Newest First</a>
+              </div>
+          </span>     
+        </div>
+
+        <div class="comment-box add-comment">
+          <span class="commenter-pic">
+            <img src="/images/user-icon.jpg" class="img-fluid">
+          </span>
+          <form action="." method="post" class="comment-form">
+            
+            {% csrf_token %}
+          <span class="commenter-name">
+            {{ comment_form.as_p }}
+             
+            <button type="submit" class="btn btn-default">Comment</button>
+          </span>
+        </form>
+        </div>
+
+        {% for comment in comments %}
+        <div class="comment-box">
+          <span class="commenter-pic">
+            <img src="/images/user-icon.jpg" class="img-fluid">
+          </span>
+          <span class="commenter-name">
+            <a href="#">{{ comment.user }}</a> <span class="comment-time">{{ comment.created_at }}</span>
+          </span>       
+          <p class="comment-txt more">{{ comment.comments|linebreaks }} </p>
+
+          <div class="comment-meta">
+            <button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 99</button>
+            <button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 149</button> 
+            <button class="comment-reply"><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>         
+          </div>
+          {% for replay in comment.replies.all %}
+          <div class="comment-box replied " >
+            <span class="commenter-pic">
+              <img src="/images/user-icon.jpg" class="img-fluid">
+            </span>
+            <span class="commenter-name">
+              <a href="#">{{replay.user}}</a> <span class="comment-time">{{ replay.created_at }}</span>
+            </span>       
+            <p class="comment-txt more">{{ replay.comments|linebreaks }}</p>
+            <div class="comment-meta">
+              <button class="comment-like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 99</button>
+              <button class="comment-dislike"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 149</button> 
+              <button class="comment-reply"  ><i class="fa fa-reply-all" aria-hidden="true"></i> Reply</button>         
+            </div>
+        
+          </div>
+          {% endfor %}
+          <div class="comment-box replied1 " style="display:none;"  >
+          <h5>Replay</h5>
+        <form action="." method="post" class="reply-form">
+            {{ comment_form.as_p }}
+            {% csrf_token %}
+            <!-- Hidden input for parent comment.id -->
+            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+            <input class="btn btn-primary" type="submit" value="Replay">
+        </form>
+      </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    
